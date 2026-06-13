@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JOE CAR - Réservation</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <a href="index.html" class="logo">JOE CAR</a>
+    </header>
+
+    <div class="container" style="display:grid; grid-template-columns: 1fr 1fr; gap:2rem; flex-wrap:wrap;">
+        <div id="detailsVehicule"><!-- Rempli par JS --></div>
+        
+        <div>
+            <h2>Formulaire de Réservation</h2>
+            <form id="formReservation">
+                <div class="form-group"><label>Nom & Prénom</label><input type="text" id="clientNom" required></div>
+                <div class="form-group"><label>Téléphone Client</label><input type="tel" id="clientTel" required></div>
+                <div class="form-group"><label>Lieu de prise en charge</label><input type="text" id="lieu" required></div>
+                <div class="form-group"><label>Date de début</label><input type="date" id="dateDebut" required onchange="calculerTotal()"></div>
+                <div class="form-group"><label>Date de fin</label><input type="date" id="dateFin" required onchange="calculerTotal()"></div>
+                
+                <div class="form-group" style="display:flex; align-items:center; gap:0.5rem;">
+                    <input type="checkbox" id="assurance" onchange="calculerTotal()" style="width:auto;">
+                    <label for="assurance" style="margin:0;">Assurance Tout Risque (+15 000 FCFA / jour)</label>
+                </div>
+
+                <div style="background:#000; padding:1rem; border-radius:5px; margin: 1rem 0; border:1px dashed var(--primary-color);">
+                    <strong>Total Estimé : </strong><span id="totalPrix" style="color:var(--primary-color); font-size:1.4rem;">0 FCFA</span>
+                </div>
+                <button type="submit" class="btn" style="width:100%;">Finaliser la Réservation</button>
+            </form>
+            <p style="margin-top:1rem; color:var(--primary-color); text-align:center; font-weight:bold;">
+                Notre numéro d'agence pour envoi du formulaire: +228 99 03 47 23
+            </p>
+        </div>
+    </div>
+<script src="app.js"></script>
+    <script>
+        // 1. Récupération des paramètres de l'URL pour afficher la bonne voiture
+        const params = new URLSearchParams(window.location.search);
+        const voitureId = parseInt(params.get('id'));
+        const voiture = getVoitures().find(v => v.id === voitureId);
+
+        // Numéro WhatsApp de l'agence JOE CAR (au format international sans le signe +)
+        // Exemple pour le Togo : 22890000000
+        const NUMERO_WHATSAPP = "22899034723"; 
+
+        if(!voiture) {
+            document.getElementById('detailsVehicule').innerHTML = "<h1>Véhicule introuvable</h1>";
+        } else {
+            document.getElementById('detailsVehicule').innerHTML = `
+                <img src="${voiture.image}" style="width:100%; border-radius:8px; margin-bottom:1rem; border: 1px solid var(--primary-color);">
+                <h1>${voiture.marque} ${voiture.modele}</h1>
+                <p class="price">${formatCFA(voiture.prix)} / jour</p>
+                <p><strong>Catégorie:</strong> ${voiture.categorie.toUpperCase()}</p>
+                <p><strong>Carburant:</strong> ${voiture.carburant}</p>
+                <p><strong>Transmission:</strong> ${voiture.transmission}</p>
+                <p><strong>Places:</strong> ${voiture.places}</p>
+            `;
+        }
+
+        // 2. Calcul du prix total en temps réel
+        function calculerTotal() {
+            const deb = new Date(document.getElementById('dateDebut').value);
+            const fin = new Date(document.getElementById('dateFin').value);
+            if(deb && fin && fin > deb) {
+                const jours = Math.ceil((fin - deb) / (1000 * 60 * 60 * 24));
+                let tarifParJour = voiture.prix;
+                if(document.getElementById('assurance').checked) tarifParJour += 15000;
+                
+                document.getElementById('totalPrix').innerText = formatCFA(jours * tarifParJour);
+                return { jours, total: jours * tarifParJour };
+            }
+            document.getElementById('totalPrix').innerText = "0 FCFA";
+            return null;
+        }
+
+        // 3. Gestion de la soumission et redirection vers WhatsApp
+        document.getElementById('formReservation').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const calculs = calculerTotal();
+            if(!calculs) return alert("Veuillez vérifier les dates de votre réservation.");
+
+            // Construction du texte de la réservation
+            const recap = `--- 🚗 RÉSERVATION JOE CAR ---\n\n` +
+                          `👤 Client : ${document.getElementById('clientNom').value}\n` +
+                          `📞 Tel : ${document.getElementById('clientTel').value}\n` +
+                          `🚘 Véhicule : ${voiture.marque} ${voiture.modele}\n` +
+                          `📍 Prise en charge : ${document.getElementById('lieu').value}\n` +
+                          `📅 Période : Du ${document.getElementById('dateDebut').value} au ${document.getElementById('dateFin').value}\n` +
+                          `⏱ Durée : ${calculs.jours} jours\n` +
+                          `🛡 Assurance Tout Risque : ${document.getElementById('assurance').checked ? 'Oui' : 'Non'}\n\n` +
+                          `💰 *Montant Total : ${formatCFA(calculs.total)}*`;
+            
+            // Encodage du texte pour l'URL WhatsApp
+            const texteEncode = encodeURIComponent(recap);
+            
+            // Création du lien WhatsApp (compatible PC et Mobile)
+            const lienWhatsApp = `https://wa.me/${NUMERO_WHATSAPP}?text=${texteEncode}`;
+            
+            // Optionnel : Copie aussi dans le presse-papier par sécurité
+            navigator.clipboard.writeText(recap);
+
+            // Redirection immédiate vers WhatsApp
+            window.open(lienWhatsApp, '_blank');
+        });
+    </script>
+
+    </body>
+</html>

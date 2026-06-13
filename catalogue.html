@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JOE CAR - Notre Catalogue</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <a href="index.html" class="logo">JOE CAR</a>
+        <nav>
+            <a href="index.html">Accueil</a>
+            <a href="catalogue.html">Catalogue</a>
+            <!-- Le lien 'Admin' est supprimé du menu visible par les clients -->
+        </nav>
+
+    </header>
+
+    <div class="container">
+        <h2>Filtrer les véhicules</h2>
+        <div style="background:#1a1a1a; padding:1.5rem; border-radius:8px; margin-bottom:2rem; display:flex; gap:1rem; flex-wrap:wrap;">
+            <div style="flex:1; min-width:200px;">
+                <label>Catégorie</label>
+                <select id="filtreCategorie" onchange="filtrerCatalogue()">
+                    <option value="tous">Toutes les catégories</option>
+                    <option value="economique">Économique</option>
+                    <option value="SUV">SUV</option>
+                    <option value="luxe">Luxe</option>
+                </select>
+            </div>
+            <div style="flex:1; min-width:200px;">
+                <label>Prix max par jour</label>
+                <input type="number" id="filtrePrix" placeholder="Ex: 80000" oninput="filtrerCatalogue()">
+            </div>
+        </div>
+
+        <div id="catalogueGrid" class="grid"><!-- Injecté par JS --></div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        function afficherCatalogue(liste) {
+            const grid = document.getElementById('catalogueGrid');
+            grid.innerHTML = "";
+            liste.forEach(v => {
+                grid.innerHTML += `
+                    <div class="card">
+                        <img src="${v.image}" alt="${v.marque}">
+                        <div class="card-body">
+                            <div class="card-title">${v.marque} ${v.modele}</div>
+                            <div class="price">${formatCFA(v.prix)} / jour</div>
+                            <p style="font-size:0.9rem; color:#aaa; margin-bottom:1rem;">
+                                ${v.places} places | ${v.carburant} | ${v.transmission}
+                            </p>
+                            <a href="vehicule.html?id=${v.id}" class="btn" style="width:100%; text-align:center;">Réserver</a>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function filtrerCatalogue() {
+            const cat = document.getElementById('filtreCategorie').value;
+            const prixMax = document.getElementById('filtrePrix').value;
+            let voitures = getVoitures();
+
+            if(cat !== 'tous') voitures = voitures.filter(v => v.categorie === cat);
+            if(prixMax) voitures = voitures.filter(v => v.prix <= parseInt(prixMax));
+
+            afficherCatalogue(voitures);
+        }
+
+        // Chargement initial
+        afficherCatalogue(getVoitures());
+    </script>
+</body>
+</html>

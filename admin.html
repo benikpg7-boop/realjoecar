@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JOE CAR - Administration</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <a href="index.html" class="logo">JOE CAR (ADMIN)</a>
+        <nav><a href="catalogue.html">Retour au Catalogue</a></nav>
+    </header>
+
+    <div class="container">
+        <h2>Ajouter un véhicule</h2>
+        <form id="formAdmin" style="margin-bottom:3rem;">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                <div class="form-group"><label>Marque</label><input type="text" id="addMarque" required></div>
+                <div class="form-group"><label>Modèle</label><input type="text" id="addModele" required></div>
+                <div class="form-group"><label>Prix par jour (FCFA)</label><input type="number" id="addPrix" required></div>
+                <div class="form-group">
+                    <label>Catégorie</label>
+                    <select id="addCategorie">
+                        <option value="economique">Économique</option>
+                        <option value="SUV">SUV</option>
+                        <option value="luxe">Luxe</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Carburant</label>
+                    <select id="addCarburant"><option value="sans plomb">Sans Plomb</option><option value="diesel">Diesel</option></select>
+                </div>
+                <div class="form-group">
+                    <label>Transmission</label>
+                    <select id="addTrans"><option value="automatique">Automatique</option><option value="manuelle">Manuelle</option></select>
+                </div>
+                <div class="form-group"><label>Nombre de places</label><input type="number" id="addPlaces" required></div>
+                <div class="form-group"><label>URL de l'image</label><input type="url" id="addImage" placeholder="https://..." required></div>
+            </div>
+            <button type="submit" class="btn">Ajouter à la flotte</button>
+        </form>
+
+        <h2>Gestion de la flotte actuelle</h2>
+        <div id="listeAdmin" style="margin-top:1rem;"></div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        function rafraichirListeAdmin() {
+            const liste = document.getElementById('listeAdmin');
+            liste.innerHTML = "";
+            getVoitures().forEach(v => {
+                liste.innerHTML += `
+                    <div style="background:#1a1a1a; padding:1rem; border:1px solid #333; margin-bottom:0.5rem; display:flex; justify-content:between; align-items:center; justify-content: space-between;">
+                        <span><strong>${v.marque} ${v.modele}</strong> - ${formatCFA(v.prix)}/j (${v.categorie})</span>
+                        <button class="btn" style="background:#e74c3c; color:#fff; padding:0.4rem 1rem;" onclick="supprimerVoiture(${v.id})">Supprimer</button>
+                    </div>
+                `;
+            });
+        }
+
+        document.getElementById('formAdmin').addEventListener('submit', function(e){
+            e.preventDefault();
+            const liste = getVoitures();
+            const nouvelleVoiture = {
+                id: Date.now(),
+                marque: document.getElementById('addMarque').value,
+                modele: document.getElementById('addModele').value,
+                prix: parseInt(document.getElementById('addPrix').value),
+                categorie: document.getElementById('addCategorie').value,
+                carburant: document.getElementById('addCarburant').value,
+                transmission: document.getElementById('addTrans').value,
+                places: parseInt(document.getElementById('addPlaces').value),
+                image: document.getElementById('addImage').value
+            };
+            liste.push(nouvelleVoiture);
+            saveVoitures(liste);
+            rafraichirListeAdmin();
+            this.reset();
+        });
+
+        window.supprimerVoiture = function(id) {
+            let liste = getVoitures().filter(v => v.id !== id);
+            saveVoitures(liste);
+            rafraichirListeAdmin();
+        };
+
+        rafraichirListeAdmin();
+    </script>
+</body>
+</html>

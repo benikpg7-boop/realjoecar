@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JOE CAR - Location de Véhicules de Prestige & Du Quotidien</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Styles spécifiques pour enrichir la page d'accueil */
+        .hero {
+            padding: 6rem 1rem;
+            text-align: center;
+            background: linear-gradient(rgba(17, 17, 17, 0.85), rgba(17, 17, 17, 0.95)), 
+                        url('https://unsplash.com') no-repeat center center/cover;
+            border-bottom: 1px solid #222;
+        }
+        .features {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin: 4rem 0;
+            text-align: center;
+        }
+        .feature-box {
+            flex: 1;
+            min-width: 250px;
+            background: #1a1a1a;
+            padding: 2rem;
+            border-radius: 8px;
+            border: 1px solid #333;
+            transition: transform 0.3s;
+        }
+        .feature-box:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-color);
+        }
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        .category-preview {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        .cat-badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            border-radius: 20px;
+            margin: 0.5rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Barre de navigation -->
+    <header>
+        <a href="index.html" class="logo">JOE CAR</a>
+        <nav>
+            <a href="index.html" class="active">Accueil</a>
+            <a href="catalogue.html">Catalogue</a>
+            <!-- Le lien 'Admin' est supprimé du menu visible par les clients -->
+        </nav>
+    </header>
+
+    <!-- Section Principale (Hero Section) -->
+    <section class="hero">
+        <h1 style="font-size: 3.5rem; margin-bottom: 1.5rem; font-weight: 800; letter-spacing: 1px;">
+            Sillonnez la route avec <span style="color: var(--primary-color);">JOE CAR</span>
+        </h1>
+        <p style="color: var(--text-muted); max-width: 700px; margin: 0 auto 2.5rem auto; font-size: 1.2rem; line-height: 1.8;">
+            Bienvenue chez JOE CAR, votre partenaire de confiance pour toutes vos locations de voitures. 
+            Que ce soit pour un voyage d'affaires, des vacances en famille ou un événement prestigieux, 
+            nous mettons à votre disposition une flotte moderne, rigoureusement entretenue et adaptée à votre budget.
+        </p>
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <a href="catalogue.html" class="btn" style="padding: 1rem 2.5rem; font-size: 1.1rem;">Réserver un véhicule</a>
+            <a href="#services" class="btn" style="background: transparent; color: #fff; border: 2px solid #fff; padding: 1rem 2.5rem; font-size: 1.1rem;">Nos Engagements</a>
+        </div>
+    </section>
+
+    <!-- Conteneur global pour le reste des sections -->
+    <div class="container" id="services">
+        
+        <!-- Section des catégories de véhicules proposées -->
+        <div class="category-preview">
+            <h2 style="margin-bottom: 1rem;">Une flotte adaptée à toutes vos exigences</h2>
+            <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Faites votre choix parmi nos gammes exclusives tarifées en Franc CFA :</p>
+            <div>
+                <span class="cat-badge">🌱 Économique (Dès 25 000 FCFA/j)</span>
+                <span class="cat-badge">⛰️ SUV & 4x4 (Dès 55 000 FCFA/j)</span>
+                <span class="cat-badge">✨ Luxe & Prestige (Dès 150 000 FCFA/j)</span>
+            </div>
+        </div>
+
+        <!-- Section de réassurance / Atouts professionnels -->
+        <h2 style="text-align: center; margin-top: 4rem;">Pourquoi choisir JOE CAR ?</h2>
+        <div class="features">
+            <div class="feature-box">
+                <div class="feature-icon">🛡️</div>
+                <h3>Sécurité Garantie</h3>
+                <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 0.5rem;">
+                    Tous nos véhicules passent un contrôle technique strict avant chaque mise à disposition. Option Assurance Tout Risque disponible.
+                </p>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">⏱️</div>
+                <h3>Réservation Express</h3>
+                <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 0.5rem;">
+                    Configurez vos options en temps réel et validez votre demande instantanément en ligne directement via notre ligne WhatsApp dédiée.
+                </p>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">🤝</div>
+                <h3>Transparence Totale</h3>
+                <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 0.5rem;">
+                    Aucun frais caché. Les prix affichés en FCFA sont fermes et le calcul de la durée de location se fait de manière juste et automatisée.
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Pied de page -->
+    <footer style="background: #000; text-align: center; padding: 2rem; border-top: 1px solid #222; color: var(--text-muted); font-size: 0.9rem;">
+        <p>&copy; 2026 JOE CAR. Tous droits réservés. Service client disponible de 08h à 22h.</p>
+    </footer>
+
+</body>
+</html>
